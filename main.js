@@ -278,6 +278,3 @@ startGameBtn.addEventListener('click', () => {
         modalEl.style.display = 'none';
     })
 
-
-    const audio = new Audio('./sound/hittarget.mp3');
-    audio.play();

@@ -7,7 +7,9 @@ canvas.height = innerHeight;
 const scoreEl = document.querySelector('#scoreEl');
 const startGameBtn = document.querySelector('#startGameBtn');
 const modalEl = document.querySelector('#modalEl');
-const bigScoreEl = document.querySelector('#bigScoreEl')
+const bigScoreEl = document.querySelector('#bigScoreEl');
+
+
 
 class Player {   //задаю свойства игроку
     constructor(x, y, radius, color){
@@ -105,14 +107,14 @@ class Particle { //рисую частицы
 const x = canvas.width/2;  //располагаю игрока в центре
 const y = canvas.height/2;
 
-let player = new Player(x, y, 10, 'white');  //создаём игрока
+let player = new Player(x, y, 10, 'white');  //создаю игрока
 let projectitles = [];   
 let enemies = [];
 let particles = [];
 
 
 function init() {
-    player = new Player(x, y, 10, 'white');  //создаём игрока
+    player = new Player(x, y, 10, 'white');  //создаю игрока
     projectitles = [];   
     enemies = [];
     particles = [];
@@ -175,12 +177,15 @@ function animate(){
         })
     enemies.forEach((enemy, index) => {
         enemy.update();
-        //конец игры
+        //конец игры    
         const dist = Math.hypot(player.x - enemy.x, player.y - enemy.y );
-        if (dist - enemy.radius - player.radius < 1) {
+        if (dist - enemy.radius - player.radius < 1) {            
+            const audio = new Audio('./sound/gameOver.mp3');
+            audio.play();
             cancelAnimationFrame(animationId);
             modalEl.style.display = 'flex';
             bigScoreEl.innerHTML = score;
+            lockGet(randPass);
         }
         projectitles.forEach((projectitle, projectitleIndex) => {
             const dist = Math.hypot(projectitle.x - enemy.x, projectitle.y - enemy.y );
@@ -200,6 +205,8 @@ function animate(){
                     ))
             }
 
+            const audio = new Audio('./sound/hittarget.mp3');
+            audio.play();
             if (enemy.radius - 10 > 10) {
                 //счёт
                 score += 100;
@@ -227,8 +234,14 @@ function animate(){
     })
 }
 
-document.addEventListener('click', (event) => { //создаю снаряд
+function nick(){
+    nickname = document.querySelector(".nickname").value;
+    if (nickname == "") nickname = "user";
+};
 
+document.addEventListener('click', (event) => { //создаю снаряд
+    const audio = new Audio('./sound/shoot.mp3');
+    audio.play();
     const angle = Math.atan2(//находим угол клика мыши от центра холста
         event.clientY - canvas.height / 2,
         event.clientX - canvas.width / 2) 
@@ -238,13 +251,33 @@ document.addEventListener('click', (event) => { //создаю снаряд
         y: Math.sin(angle) * 4
     }
 
-    projectitles.push(new Projectitle(  // каждый клик вставляет новый снаряд в массиве
+    projectitles.push(new Projectitle( // каждый клик вставляет новый снаряд в массиве
         canvas.width / 2, canvas.height / 2, 5, 'white', velocity
     ))
 });
-startGameBtn.addEventListener('click', () => {
+
+if (tableNone) {
+
+    scoreTable.style.display = "none";
+    scoreTableHeight = scoreTable.offsetHeight;
+    scoreTableWidth = scoreTable.offsetWidth;
+    
+    tableNone = false;
+    tableScore();
+}
+    
+else {
+    tableNone = true;
+    tableScore();
+ }
+startGameBtn.addEventListener('click', () => {        
+        nick();
         init();
         animate();
         spawnEnemies();
         modalEl.style.display = 'none';
     })
+
+
+    const audio = new Audio('./sound/hittarget.mp3');
+    audio.play();

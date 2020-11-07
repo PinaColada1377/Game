@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+    <div class="tableDiv">
+        <div class="tableWrapper">
+            <button onclick="tableScore()" class="start">Закрыть</button>
+        </div>
+    </div>
+
+    <div class = "score">
+        <span>Счёт: </span>
+        <span id="scoreEl">0</span>
+    </div>
+
+    <div class = "modal" id="modalEl">
+        <div class = "back">
+            <p>Счёт:</p>
+            <h1 id="bigScoreEl">Нет очков</h1>            
+            <input type="longtext" class = "nickname" placeholder="Введите имя">
+            <button id="startGameBtn">Играть</button>
+            <button onclick="tableScore()" >Лучший счёт</button>
+        </div>
+    </div>
+    <canvas></canvas>     
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.5.1/gsap.min.js" integrity="sha512-IQLehpLoVS4fNzl7IfH8Iowfm5+RiMGtHykgZJl9AWMgqx0AmJ6cRWcB+GaGVtIsnC4voMfm8f2vwtY+6oPjpQ==" crossorigin="anonymous"></script>
+    <script src="table.js"></script>
+    <script src="ajax.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

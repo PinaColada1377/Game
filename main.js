@@ -26,7 +26,7 @@ class Player {   //задаю свойства игроку
     }
 }
 
-class Projectitle { //рисую снаряды
+class Projectile { //задаю свойство снарядам
     constructor (x, y, radius, color, velocity){
         this.x = x;
         this.y = y;
@@ -49,7 +49,7 @@ class Projectitle { //рисую снаряды
     }
 }
 
-class Enemy { //рисую врагов
+class Enemy { //свойства врагов
     constructor (x, y, radius, color, velocity){
         this.x = x;
         this.y = y;
@@ -74,7 +74,7 @@ class Enemy { //рисую врагов
 
 
 const friction = 0.99
-class Particle { //рисую частицы
+class Particle { //свойства частиц
     constructor (x, y, radius, color, velocity){
         this.x = x;
         this.y = y;
@@ -108,14 +108,14 @@ const x = canvas.width/2;  //располагаю игрока в центре
 const y = canvas.height/2;
 
 let player = new Player(x, y, 10, 'white');  //создаю игрока
-let projectitles = [];   
+let projectiles = [];   
 let enemies = [];
 let particles = [];
 
 
 function init() {
     player = new Player(x, y, 10, 'white');  //создаю игрока
-    projectitles = [];   
+    projectiles = [];   
     enemies = [];
     particles = [];
     score = 0;
@@ -165,13 +165,13 @@ function animate(){
             particle.update();
         }
     })
-    projectitles.forEach((projectitle, index) => {
-        projectitle.update();
+    projectiles.forEach((projectile, index) => {
+        projectile.update();
 
         //убрать с краёв экрана
-        if(projectitle.x + projectitle.radius < 0 || projectitle.x - projectitle.radius > canvas.width || projectitle.y + projectitle.radius < 0 || projectitle.y - projectitle.radius > canvas.height) {
+        if(projectile.x + projectile.radius < 0 || projectile.x - projectile.radius > canvas.width || projectile.y + projectile.radius < 0 || projectile.y - projectile.radius > canvas.height) {
             setTimeout(() => {
-                projectitles.splice(index, 1);
+                projectiles.splice(index, 1);
             }, 0) 
         }
         })
@@ -187,15 +187,15 @@ function animate(){
             bigScoreEl.innerHTML = score;
             lockGet(randPass);
         }
-        projectitles.forEach((projectitle, projectitleIndex) => {
-            const dist = Math.hypot(projectitle.x - enemy.x, projectitle.y - enemy.y );
-        if (dist - enemy.radius - projectitle.radius < 1) {
+        projectiles.forEach((projectile, projectileIndex) => {
+            const dist = Math.hypot(projectile.x - enemy.x, projectile.y - enemy.y );
+        if (dist - enemy.radius - projectile.radius < 1) {
             //создаю взрыв
             for (let i = 0; i < enemy.radius * 2; i++){
                 particles.push(
                     new Particle(
-                        projectitle.x,
-                        projectitle.y, 
+                        projectile.x,
+                        projectile.y, 
                         Math.random()*2,
                         enemy.color, 
                         {
@@ -217,7 +217,7 @@ function animate(){
                 })
                 enemy.radius -= 10;
                 setTimeout(() => {
-                    projectitles.splice(projectitleIndex, 1);
+                    projectiles.splice(projectileIndex, 1);
             }, 0) 
             } else{
             //счёт ближе к центру
@@ -226,7 +226,7 @@ function animate(){
 
             setTimeout(() => {
                 enemies.splice(index, 1);
-                projectitles.splice(projectitleIndex, 1);
+                projectiles.splice(projectileIndex, 1);
             }, 0)  
            }
         }
@@ -238,23 +238,6 @@ function nick(){
     nickname = document.querySelector(".nickname").value;
     if (nickname == "") nickname = "user";
 };
-
-document.addEventListener('click', (event) => { //создаю снаряд
-    const audio = new Audio('./sound/shoot.mp3');
-    audio.play();
-    const angle = Math.atan2(//находим угол клика мыши от центра холста
-        event.clientY - canvas.height / 2,
-        event.clientX - canvas.width / 2) 
-
-    const velocity = {
-        x: Math.cos(angle) * 4,
-        y: Math.sin(angle) * 4
-    }
-
-    projectitles.push(new Projectitle( // каждый клик вставляет новый снаряд в массиве
-        canvas.width / 2, canvas.height / 2, 5, 'white', velocity
-    ))
-});
 
 if (tableNone) {
 
@@ -270,7 +253,26 @@ else {
     tableNone = true;
     tableScore();
  }
-startGameBtn.addEventListener('click', () => {        
+ 
+startGameBtn.addEventListener('click', () => {    
+   
+    document.addEventListener('click', (event) => { //создаю снаряд
+        const audio = new Audio('./sound/shoot.mp3');
+        audio.play();
+        const angle = Math.atan2(//находим угол клика мыши от центра холста
+            event.clientY - canvas.height / 2,
+            event.clientX - canvas.width / 2) 
+    
+        const velocity = {
+            x: Math.cos(angle) * 4,
+            y: Math.sin(angle) * 4
+        }
+    
+        projectiles.push(new Projectile( // каждый клик вставляет новый снаряд в массиве
+            canvas.width / 2, canvas.height / 2, 5, 'white', velocity
+        ))
+    });
+
         nick();
         init();
         animate();
